@@ -2,7 +2,7 @@
 
 ## Site online
 
-**Link do site:** `([https://osamuelz.github.io/Frame-LP]/)`
+**Link do site:** [Acessar FRAME](https://osamuelz.github.io/Frame-LP/))
 
 <!-- Depois de publicar, substitua a linha acima por: **Link do site:** [Acessar FRAME](https://sua-url-aqui) -->
 
