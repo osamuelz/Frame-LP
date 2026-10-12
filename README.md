@@ -44,12 +44,6 @@ FRAME/
 
 O mockup e o acervo ilustram o conceito do produto; não oferecem edição real de arquivos, upload ou download de aplicativo.
 
-## Publicar no GitHub Pages
-
-Envie os arquivos para um repositório. Em **Settings → Pages**, escolha **Deploy from a branch**, a branch desejada e a pasta **/ (root)**. Não é necessário um processo de build.
-
-Para incluir um link para seu repositório, adicione a URL real à navegação do rodapé em `index.html`.
-
 ## Créditos
 
 As fotografias locais foram preservadas do projeto original. Ele informa a origem como Unsplash e os seguintes créditos: Ayo Ogunseinde (hero), Bailey Zindel (comparador), Joel Filipe (arquitetura), Kalen Emsley (paisagem), Christopher Campbell (retrato), Nathan Dumlao (cotidiano), Scott Webb (natureza) e Aleksandar Pasaric (cidade).
