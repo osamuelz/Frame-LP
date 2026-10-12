@@ -1,275 +1,166 @@
-/**
- * FRAME — JavaScript Principal
- * Interações acessíveis, controle de comparação de imagens,
- * alternância de estilos de edição e visualização de galeria (lightbox).
- */
+'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Inicialização de todos os módulos
-  initMobileNavigation();
-  initComparisonSlider();
-  initStylePresets();
-  initGalleryLightbox();
-  initScrollAnimations();
-});
+initTheme();
+initMobileNavigation();
+initComparison();
+initStylePresets();
+initLightbox();
+initReveals();
 
-/* --------------------------------------------------------------------------
- * 1. Navegação Mobile Acessível
- * -------------------------------------------------------------------------- */
+function initTheme() {
+  const button = document.querySelector('.theme-toggle');
+  const root = document.documentElement;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  function syncTheme() {
+    const light = root.dataset.theme === 'light';
+    button.setAttribute('aria-label', light ? 'Ativar tema escuro' : 'Ativar tema claro');
+    button.setAttribute('aria-pressed', String(light));
+    meta.content = light ? '#f5f4f8' : '#101114';
+  }
+  button.addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('frame-theme', root.dataset.theme); } catch (_) {}
+    syncTheme();
+  });
+  syncTheme();
+}
+
 function initMobileNavigation() {
-  const toggleBtn = document.getElementById('mobile-menu-toggle');
-  const mobileNav = document.getElementById('mobile-navigation');
-  const mobileLinks = document.querySelectorAll('.mobile-nav-link, .mobile-nav-cta');
-
-  if (!toggleBtn || !mobileNav) return;
-
-  function setMenuState(open) {
-    toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) {
-      mobileNav.classList.add('is-open');
-      toggleBtn.setAttribute('aria-label', 'Fechar menu de navegação');
-    } else {
-      mobileNav.classList.remove('is-open');
-      toggleBtn.setAttribute('aria-label', 'Abrir menu de navegação');
-    }
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('mobile-navigation');
+  const mobile = window.matchMedia('(max-width: 600px)');
+  function setOpen(open) {
+    menu.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Fechar menu de navegação' : 'Abrir menu de navegação');
   }
-
-  toggleBtn.addEventListener('click', () => {
-    const isCurrentlyOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
-    setMenuState(!isCurrentlyOpen);
+  toggle.addEventListener('click', () => setOpen(menu.hidden));
+  menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+    setOpen(false);
+    // Move focus to the destination so a hidden link never retains keyboard focus.
+    const section = document.querySelector(link.hash);
+    section.setAttribute('tabindex', '-1');
+    section.focus({ preventScroll: true });
+  }));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !menu.hidden) { setOpen(false); toggle.focus(); }
   });
-
-  // Fechar ao clicar em qualquer link da navegação
-  mobileLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      setMenuState(false);
-    });
+  document.addEventListener('click', event => {
+    if (!menu.hidden && !event.target.closest('.site-header')) setOpen(false);
   });
-
-  // Fechar com Escape se estiver aberto
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && toggleBtn.getAttribute('aria-expanded') === 'true') {
-      setMenuState(false);
-      toggleBtn.focus();
-    }
-  });
+  mobile.addEventListener('change', () => setOpen(false));
 }
 
-/* --------------------------------------------------------------------------
- * 2. Demonstração Interativa de Edição: Comparador de Imagens
- * -------------------------------------------------------------------------- */
-function initComparisonSlider() {
+function initComparison() {
   const card = document.getElementById('comparison-card');
-  const slider = document.getElementById('comparison-range-input');
-
-  if (!card || !slider) return;
-
-  // Atualiza a posição visual da divisão
-  function updatePosition(percentage) {
-    const clamped = Math.max(0, Math.min(100, percentage));
-    card.style.setProperty('--split-pos', `${clamped}%`);
-    slider.value = clamped;
+  const input = document.getElementById('comparison-range-input');
+  function update(value) {
+    const percentage = Math.round(Math.max(0, Math.min(100, value)));
+    input.value = percentage;
+    input.setAttribute('aria-valuetext', `${percentage}% da foto com edição FRAME`);
+    card.style.setProperty('--split-pos', `${percentage}%`);
   }
-
-  // Controle nativo via input range (teclado, leitor de tela e arrasto padrão)
-  slider.addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value);
-    updatePosition(val);
-  });
-
-  // Suporte adicional a toque e mouse diretamente na superfície do card
-  let isPointerDown = false;
-
-  function handlePointerMove(e) {
-    if (!isPointerDown) return;
+  input.addEventListener('input', () => update(Number(input.value)));
+  let drag = null;
+  let horizontal = false;
+  function position(event) {
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = (x / rect.width) * 100;
-    updatePosition(percentage);
+    update((event.clientX - rect.left) / rect.width * 100);
   }
-
-  card.addEventListener('pointerdown', (e) => {
-    // Permite que o próprio slider responda ao clique
-    isPointerDown = true;
-    card.setPointerCapture(e.pointerId);
-    handlePointerMove(e);
+  input.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0) return;
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    horizontal = event.pointerType !== 'touch';
+    input.setPointerCapture(event.pointerId);
+    if (horizontal) { event.preventDefault(); input.focus({ preventScroll: true }); position(event); }
   });
-
-  card.addEventListener('pointermove', handlePointerMove);
-
-  function endPointer(e) {
-    if (isPointerDown) {
-      isPointerDown = false;
-      try {
-        card.releasePointerCapture(e.pointerId);
-      } catch (err) {
-        // Ignora caso já tenha sido liberado
-      }
+  input.addEventListener('pointermove', event => {
+    if (!drag || event.pointerId !== drag.id) return;
+    if (!horizontal) {
+      const dx = Math.abs(event.clientX - drag.x);
+      const dy = Math.abs(event.clientY - drag.y);
+      if (dy > dx && dy > 6) { end(event); return; }
+      horizontal = dx > 6;
     }
+    if (horizontal) { event.preventDefault(); position(event); }
+  });
+  function end(event) {
+    if (!drag || event.pointerId !== drag.id) return;
+    if (input.hasPointerCapture(event.pointerId)) input.releasePointerCapture(event.pointerId);
+    drag = null;
+    horizontal = false;
   }
-
-  card.addEventListener('pointerup', endPointer);
-  card.addEventListener('pointercancel', endPointer);
-
-  // Inicializa na metade
-  updatePosition(50);
+  input.addEventListener('pointerup', event => {
+    if (drag && !horizontal) position(event);
+    end(event);
+  });
+  input.addEventListener('pointercancel', end);
+  input.addEventListener('lostpointercapture', () => { drag = null; horizontal = false; });
+  update(Number(input.value));
 }
 
-/* --------------------------------------------------------------------------
- * 3. Demonstração Interativa de Edição: Seleção de Estilos
- * -------------------------------------------------------------------------- */
 function initStylePresets() {
-  const presetButtons = document.querySelectorAll('.style-preset-btn');
-  const modifiedLayer = document.querySelector('.comparison-layer-modified');
-  const modifiedBadge = document.querySelector('.comparison-badge-modified');
-
-  if (!presetButtons.length || !modifiedLayer) return;
-
-  const styleNames = {
-    'natural': 'Natural',
-    'cinema': 'Cinema',
-    'mono': 'Mono'
+  const buttons = [...document.querySelectorAll('.style-preset-btn')];
+  const layer = document.querySelector('.comparison-layer-modified');
+  const badge = document.querySelector('.comparison-badge-modified');
+  const descriptions = {
+    natural: 'Cores vivas. Luz na medida. A beleza do instante.',
+    cinema: 'Tons quentes e contraste profundo. Uma história em cada cena.',
+    mono: 'Sem cor, com sentimento. Luz e textura em primeiro plano.'
   };
-
-  presetButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const selectedStyle = btn.getAttribute('data-style');
-
-      // Atualiza estado visual dos botões e acessibilidade
-      presetButtons.forEach(b => {
-        b.classList.remove('is-active');
-        b.setAttribute('aria-pressed', 'false');
-      });
-
-      btn.classList.add('is-active');
-      btn.setAttribute('aria-pressed', 'true');
-
-      // Remove classes anteriores de filtro e adiciona a nova
-      modifiedLayer.classList.remove('filter-natural', 'filter-cinema', 'filter-mono');
-      modifiedLayer.classList.add(`filter-${selectedStyle}`);
-
-      // Atualiza o indicador textual do estilo ativo
-      if (modifiedBadge && styleNames[selectedStyle]) {
-        modifiedBadge.setAttribute('data-active-style', styleNames[selectedStyle]);
-      }
+  buttons.forEach(button => button.addEventListener('click', () => {
+    buttons.forEach(item => {
+      const active = item === button;
+      item.classList.toggle('is-active', active);
+      item.setAttribute('aria-pressed', String(active));
     });
-  });
+    layer.classList.remove('filter-natural', 'filter-cinema', 'filter-mono');
+    layer.classList.add(`filter-${button.dataset.style}`);
+    badge.textContent = `FRAME · ${button.textContent.trim()}`;
+    document.getElementById('preset-description').textContent = descriptions[button.dataset.style];
+  }));
 }
 
-/* --------------------------------------------------------------------------
- * 4. Galeria Editorial & Lightbox Acessível
- * -------------------------------------------------------------------------- */
-function initGalleryLightbox() {
-  const galleryItems = document.querySelectorAll('.gallery-item');
-  const modal = document.getElementById('gallery-lightbox');
-  const closeBtn = document.getElementById('lightbox-close-btn');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const lightboxTitle = document.getElementById('lightbox-title');
-  const lightboxCategory = document.getElementById('lightbox-category');
-
-  if (!modal || !galleryItems.length || !closeBtn || !lightboxImg) return;
-
-  let triggerElement = null;
-
-  function openLightbox(item) {
-    triggerElement = item;
-
-    const img = item.querySelector('.gallery-item-image');
-    const title = item.getAttribute('data-title') || '';
-    const category = item.getAttribute('data-category') || '';
-    const fullSrc = item.getAttribute('data-full') || (img ? img.getAttribute('src') : '');
-    const altText = img ? img.getAttribute('alt') : 'Fotografia ampliada';
-
-    lightboxImg.setAttribute('src', fullSrc);
-    lightboxImg.setAttribute('alt', altText);
-    if (lightboxTitle) lightboxTitle.textContent = title;
-    if (lightboxCategory) lightboxCategory.textContent = category;
-
-    modal.classList.add('is-open');
-    modal.setAttribute('aria-hidden', 'false');
+function initLightbox() {
+  const dialog = document.getElementById('gallery-lightbox');
+  const image = document.getElementById('lightbox-img');
+  const close = document.getElementById('lightbox-close-btn');
+  let trigger;
+  let previousOverflow;
+  document.querySelectorAll('.gallery-item').forEach(item => item.addEventListener('click', () => {
+    trigger = item;
+    const thumbnail = item.querySelector('img');
+    image.src = thumbnail.getAttribute('src');
+    image.alt = thumbnail.alt;
+    document.getElementById('lightbox-title').textContent = item.dataset.title;
+    document.getElementById('lightbox-category').textContent = item.dataset.category;
+    previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-
-    // Foco no botão de fechar para controle de teclado imediato
-    closeBtn.focus();
-  }
-
-  function closeLightbox() {
-    if (!modal.classList.contains('is-open')) return;
-
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-
-    // Retorna o foco ao elemento que abriu o modal
-    if (triggerElement && typeof triggerElement.focus === 'function') {
-      triggerElement.focus();
-    }
-  }
-
-  galleryItems.forEach(item => {
-    item.addEventListener('click', () => {
-      openLightbox(item);
-    });
-
-    item.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openLightbox(item);
-      }
-    });
+    dialog.showModal();
+    close.focus();
+  }));
+  close.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => {
+    const rect = dialog.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
   });
-
-  closeBtn.addEventListener('click', closeLightbox);
-
-  // Fechar ao clicar fora da área da imagem (no backdrop escuro)
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeLightbox();
-    }
-  });
-
-  // Controle de teclado: fechar com Escape e prender foco (Focus Trap)
-  document.addEventListener('keydown', (e) => {
-    if (!modal.classList.contains('is-open')) return;
-
-    if (e.key === 'Escape') {
-      closeLightbox();
-      return;
-    }
-
-    if (e.key === 'Tab') {
-      // Como o único elemento focável interativo no modal é o botão de fechar,
-      // garantimos que o foco permaneça nele
-      e.preventDefault();
-      closeBtn.focus();
-    }
+  dialog.addEventListener('close', () => {
+    document.body.style.overflow = previousOverflow || '';
+    if (trigger) trigger.focus({ preventScroll: true });
   });
 }
 
-/* --------------------------------------------------------------------------
- * 5. Animações Sutis com IntersectionObserver
- * -------------------------------------------------------------------------- */
-function initScrollAnimations() {
-  // Respeita prefers-reduced-motion
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const animElements = document.querySelectorAll('.fade-in-element');
-
-  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-    animElements.forEach(el => el.classList.add('is-visible'));
-    return;
-  }
-
-  const observer = new IntersectionObserver((entries, obs) => {
+function initReveals() {
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (motion.matches || !('IntersectionObserver' in window)) return;
+  const elements = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        obs.unobserve(entry.target);
-      }
+      if (entry.isIntersecting) { entry.target.classList.remove('is-pending'); observer.unobserve(entry.target); }
     });
-  }, {
-    threshold: 0.15,
-    rootMargin: '0px 0px -40px 0px'
+  }, { threshold: 0.08 });
+  elements.forEach(element => { element.classList.add('is-pending'); observer.observe(element); });
+  motion.addEventListener('change', event => {
+    if (event.matches) { elements.forEach(element => element.classList.remove('is-pending')); observer.disconnect(); }
   });
-
-  animElements.forEach(el => observer.observe(el));
 }
