@@ -1,545 +1,129 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FRAME — Fotografia e Edição com Sensibilidade</title>
-  <meta name="description" content="FRAME transforma fotografias do cotidiano em imagens expressivas com ferramentas simples e resultados sofisticados. Aplicativo conceitual de fotografia.">
-  <meta name="theme-color" content="#F5F5F7">
-
-  <!-- Estilos Principais -->
+  <title>FRAME — Cada instante merece espaço.</title>
+  <meta name="description" content="Seu olhar, sua assinatura. Explore FRAME, um conceito de app de fotografia com estilos, edição interativa e uma galeria de novos olhares.">
+  <meta name="theme-color" content="#101114">
+  <script>
+    try { document.documentElement.dataset.theme = localStorage.getItem('frame-theme') === 'light' ? 'light' : 'dark'; } catch (_) {}
+  </script>
+  <link rel="preload" href="assets/fonts/manrope-variable.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/main.js" defer></script>
 </head>
 <body>
-
-  <!-- ======================================================================
-       1. CABEÇALHO & NAVEGAÇÃO
-       ====================================================================== -->
-  <header class="site-header" id="cabecalho">
+  <a class="skip-link" href="#inicio">Pular para o conteúdo</a>
+  <header class="site-header">
     <div class="nav-container">
-      <a href="#inicio" class="brand" aria-label="FRAME Início">
-        <span class="brand-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <!-- Símbolo estilizado de enquadramento fotográfico -->
-            <path d="M4 9V5a1 1 0 0 1 1-1h4" />
-            <path d="M20 9V5a1 1 0 0 0-1-1h-4" />
-            <path d="M4 15v4a1 1 0 0 0 1 1h4" />
-            <path d="M20 15v4a1 1 0 0 1-1 1h-4" />
-            <circle cx="12" cy="12" r="3" stroke-width="1.8" />
-          </svg>
-        </span>
-        <span class="brand-text">FRAME</span>
+      <a class="brand" href="#inicio" aria-label="FRAME, início">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/><circle cx="12" cy="12" r="3.5"/></svg>
+        <span>frame<span class="brand-dot">.</span></span>
       </a>
-
-      <!-- Links Desktop -->
-      <nav aria-label="Navegação principal">
-        <ul class="nav-links">
-          <li><a href="#recursos" class="nav-link">Recursos</a></li>
-          <li><a href="#galeria" class="nav-link">Galeria</a></li>
-          <li><a href="#demonstracao" class="nav-link">Experimente</a></li>
-        </ul>
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="#recursos">Recursos</a><a href="#demonstracao">O editor</a><a href="#galeria">Galeria</a>
       </nav>
-
-      <div class="nav-actions-desktop">
-        <a href="#demonstracao" class="nav-cta-btn">Experimentar</a>
+      <div class="nav-actions">
+        <button class="theme-toggle icon-button" type="button" aria-label="Ativar tema claro" aria-pressed="false">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg>
+        </button>
+        <a class="nav-cta" href="#demonstracao">Experimentar <span aria-hidden="true">↗</span></a>
+        <button class="mobile-menu-btn icon-button" id="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-navigation" aria-label="Abrir menu de navegação">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 8h14M5 16h14"/></svg>
+        </button>
       </div>
-
-      <!-- Botão Menu Mobile -->
-      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-expanded="false" aria-controls="mobile-navigation" aria-label="Abrir menu de navegação">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
     </div>
-
-    <!-- Gaveta de Navegação Mobile -->
-    <nav class="mobile-nav" id="mobile-navigation" aria-label="Navegação móvel">
-      <ul class="mobile-nav-links">
-        <li><a href="#recursos" class="mobile-nav-link">Recursos</a></li>
-        <li><a href="#galeria" class="mobile-nav-link">Galeria</a></li>
-        <li><a href="#demonstracao" class="mobile-nav-link">Experimente</a></li>
-      </ul>
-      <a href="#demonstracao" class="mobile-nav-cta">Experimentar FRAME</a>
+    <nav class="mobile-nav" id="mobile-navigation" aria-label="Navegação móvel" hidden>
+      <a href="#recursos">Recursos</a><a href="#demonstracao">O editor</a><a href="#galeria">Galeria</a>
     </nav>
   </header>
 
   <main id="inicio">
-
-    <!-- ====================================================================
-         2. SEÇÃO PRINCIPAL (HERO)
-         ==================================================================== -->
-    <section class="hero-section" aria-labelledby="hero-title">
-      <div class="container">
-        <div class="hero-header fade-in-element">
-          <span class="hero-tagline">Fotografia essencial</span>
-          <h1 id="hero-title" class="hero-title">Cada instante merece espaço.</h1>
-          <p class="hero-description">Edite com leveza. Encontre seu estilo. Transforme suas fotos com FRAME.</p>
-          <div class="hero-actions">
-            <a href="#demonstracao" class="btn-primary">Experimente a edição</a>
-            <a href="#galeria" class="btn-link">
-              Explore a galeria
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="6 12 10 8 6 4"></polyline>
-              </svg>
-            </a>
+    <section class="hero-section container" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="eyebrow hero-eyebrow"><span class="status-dot" aria-hidden="true"></span> Um novo olhar sobre o cotidiano</span>
+        <h1 id="hero-title">Cada instante<br>merece <span class="accent-text">espaço.</span></h1>
+        <p class="hero-description">A fotografia começa no seu olhar.<br>O FRAME dá espaço para ele ir além.</p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="#demonstracao">Explore o editor <span aria-hidden="true">↗</span></a>
+          <a class="btn-secondary" href="#galeria">Veja a galeria</a>
+        </div>
+        <div class="hero-footnote"><span class="mini-line" aria-hidden="true"></span> Menos ruído. Mais expressão.</div>
+      </div>
+      <div class="hero-scene" aria-label="Prévia visual do aplicativo FRAME">
+        <figure class="scene-landscape">
+          <img src="assets/images/gallery-paisagem.jpg" alt="Montanhas e um lago azul cercado por florestas" width="1000" height="667" fetchpriority="high">
+          <figcaption><span>Encontre sua perspectiva.</span><span aria-hidden="true">↗</span></figcaption>
+        </figure>
+        <div class="phone-mockup">
+          <div class="phone-top"><span>9:41</span><span class="phone-island" aria-hidden="true"></span><span aria-hidden="true">▰</span></div>
+          <div class="phone-appbar"><span>frame.</span><span>Editar <span aria-hidden="true">↗</span></span></div>
+          <div class="phone-image-wrap">
+            <img src="assets/images/hero-phone.jpg" alt="Retrato com iluminação azul e violeta na prévia do editor" class="phone-photo" width="900" height="1125" fetchpriority="high">
+            <div class="phone-grid" aria-hidden="true"></div><span class="phone-photo-label">Seu olhar. Sua assinatura.</span>
           </div>
+          <div class="phone-tools" aria-hidden="true"><span class="is-active">Luz</span><span>Cor</span><span>Detalhe</span></div>
+          <div class="phone-bottom" aria-hidden="true"></div>
         </div>
+        <div class="scene-stamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5Z"/></svg><span>Feito para<br>o seu olhar.</span></div>
+        <div class="floating-adjustment" aria-hidden="true"><svg class="adjustment-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><div><div class="adjustment-heading"><span>Um pouco mais de luz</span><span>+0.4</span></div><div class="visual-slider"><span></span></div></div></div>
+        <span class="scene-caption">UM INSTANTE. INFINITAS POSSIBILIDADES.</span>
+      </div>
+    </section>
 
-        <!-- Mockup de Celular Refinado com HTML & CSS Puro -->
-        <div class="hero-mockup-wrapper fade-in-element">
-          <div class="phone-mockup" role="img" aria-label="Demonstração visual do aplicativo FRAME em execução num smartphone">
-            
-            <!-- Ilha Dinâmica -->
-            <div class="phone-island" aria-hidden="true">
-              <div class="phone-island-camera"></div>
-            </div>
+    <div class="intro-strip container"><p>Seu olhar, sua assinatura.</p><div><span>Edição intuitiva</span><span>Estilos autorais</span><span>Novas perspectivas</span></div></div>
 
-            <!-- Barra de Status Superior -->
-            <div class="phone-status-bar" aria-hidden="true">
-              <span>9:41</span>
-              <div class="phone-status-icons">
-                <svg viewBox="0 0 24 24"><path d="M12 4a14.9 14.9 0 0 0-9.4 3.3.8.8 0 0 0-.1 1.1l8.9 11.2a.8.8 0 0 0 1.2 0l8.9-11.2a.8.8 0 0 0-.1-1.1A14.9 14.9 0 0 0 12 4z"/></svg>
-                <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 11v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="4" y="9" width="11" height="6" rx="1.5"/></svg>
-              </div>
-            </div>
+    <section class="features-section section-space container" id="recursos" aria-labelledby="features-title">
+      <header class="section-header reveal"><span class="eyebrow">ESSENCIAL, POR NATUREZA</span><h2 id="features-title">Tudo para criar.<br><span class="muted-text">Espaço para ser você.</span></h2><p>Ferramentas simples. Possibilidades que acompanham a sua criatividade.</p></header>
+      <div class="features-grid">
+        <article class="feature-card reveal"><span class="feature-index">01 / LUZ</span><div class="feature-visual exposure-visual" aria-hidden="true"><span class="exposure-orb"></span><div class="exposure-scale"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>− &nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp; +</span></div><h3>O ajuste certo.<br>O seu equilíbrio.</h3><p>Luz, contraste e cor na medida do seu olhar.</p></article>
+        <article class="feature-card reveal"><span class="feature-index">02 / ESTILO</span><div class="feature-visual styles-visual" aria-hidden="true"><img src="assets/images/gallery-retrato.jpg" alt="" width="1000" height="1498" loading="lazy"><img src="assets/images/gallery-retrato.jpg" alt="" width="1000" height="1498" loading="lazy"><img src="assets/images/gallery-retrato.jpg" alt="" width="1000" height="1498" loading="lazy"></div><h3>Uma foto.<br>Várias atmosferas.</h3><p>Explore diferentes estilos. Encontre o que combina com você.</p></article>
+        <article class="feature-card reveal"><span class="feature-index">03 / MEMÓRIA</span><div class="feature-visual collection-visual" aria-hidden="true"><img src="assets/images/gallery-arquitetura.jpg" alt="" width="1000" height="667" loading="lazy"><img src="assets/images/gallery-cotidiano.jpg" alt="" width="1000" height="667" loading="lazy"><img src="assets/images/gallery-textura.jpg" alt="" width="1000" height="1500" loading="lazy"><img src="assets/images/gallery-urbano.jpg" alt="" width="1000" height="607" loading="lazy"></div><h3>Momentos que<br>merecem ficar.</h3><p>Um conceito de acervo para reunir suas melhores histórias.</p></article>
+      </div>
+    </section>
 
-            <!-- Tela com Fotografia Real e Controles de Edição -->
-            <div class="phone-screen">
-              <img 
-                src="assets/images/hero-phone.jpg" 
-                alt="Retrato fotográfico com iluminação suave em edição no FRAME" 
-                class="phone-photo"
-                width="320"
-                height="648"
-                fetchpriority="high"
-              >
-              
-              <!-- Grade de Composição (Terços) -->
-              <div class="phone-grid-overlay" aria-hidden="true"></div>
-
-              <!-- Interface de Ajuste Sobreposta -->
-              <div class="phone-edit-ui" aria-hidden="true">
-                <div class="phone-slider-control">
-                  <span class="phone-param-name">Exposição</span>
-                  <div class="phone-param-slider">
-                    <div class="phone-param-fill">
-                      <div class="phone-param-thumb"></div>
-                    </div>
-                  </div>
-                  <span class="phone-param-value">+0.4</span>
-                </div>
-
-                <div class="phone-tool-pills">
-                  <span class="phone-pill is-active">Luz</span>
-                  <span class="phone-pill">Contraste</span>
-                  <span class="phone-pill">Cor</span>
-                  <span class="phone-pill">P&B</span>
-                </div>
-
-                <div class="phone-bottom-actions">
-                  <span>Cancelar</span>
-                  <span class="phone-action-confirm">Concluir</span>
-                </div>
-              </div>
-            </div>
-
+    <section class="demo-section section-space container" id="demonstracao" aria-labelledby="demo-title">
+      <div class="editor-panel reveal">
+        <div class="editor-copy"><span class="eyebrow">O SEU ESTÚDIO, EM UM TOQUE</span><h2 id="demo-title">Pequenos ajustes.<br><span class="accent-text">Outra atmosfera.</span></h2><p>A mesma foto, uma nova sensação. Escolha um estilo e arraste o divisor para descobrir a diferença.</p>
+          <div class="style-preset-group" role="group" aria-label="Estilo fotográfico">
+            <button class="style-preset-btn is-active" type="button" data-style="natural" aria-pressed="true"><span class="preset-dot natural-dot" aria-hidden="true"></span>Natural</button>
+            <button class="style-preset-btn" type="button" data-style="cinema" aria-pressed="false"><span class="preset-dot cinema-dot" aria-hidden="true"></span>Cinema</button>
+            <button class="style-preset-btn" type="button" data-style="mono" aria-pressed="false"><span class="preset-dot mono-dot" aria-hidden="true"></span>Mono</button>
           </div>
+          <p class="preset-description" id="preset-description" aria-live="polite">Cores vivas. Luz na medida. A beleza do instante.</p><p class="demo-disclaimer">Demonstração com efeitos visuais.</p>
         </div>
+        <div class="comparison-wrapper"><div class="comparison-card" id="comparison-card">
+          <img src="assets/images/demo-photo.jpg" alt="Rio e floresta entre montanhas ao pôr do sol, antes da edição" class="comparison-img" width="1400" height="934" loading="lazy">
+          <div class="comparison-layer-modified filter-natural"><img src="assets/images/demo-photo.jpg" alt="" class="comparison-img" width="1400" height="934" loading="lazy"></div>
+          <span class="comparison-badge comparison-badge-modified">FRAME · Natural</span><span class="comparison-badge comparison-badge-original">Original</span>
+          <div class="comparison-divider" aria-hidden="true"><span class="comparison-handle">‹ &nbsp; ›</span></div>
+          <input type="range" id="comparison-range-input" class="comparison-range-input" min="0" max="100" value="50" step="1" aria-label="Porcentagem da foto com edição FRAME" aria-valuetext="50% da foto com edição FRAME">
+        </div><div class="comparison-footer"><span><span class="status-dot" aria-hidden="true"></span> Uma nova perspectiva</span><span>Arraste para comparar <span aria-hidden="true">↔</span></span></div></div>
       </div>
     </section>
 
-    <!-- ====================================================================
-         3. APRESENTAÇÃO DOS RECURSOS
-         ==================================================================== -->
-    <section class="features-section" id="recursos" aria-labelledby="features-title">
-      <div class="container">
-        <header class="section-header fade-in-element">
-          <span class="section-label">Recursos</span>
-          <h2 id="features-title" class="section-title">Seu olhar. Com novas possibilidades.</h2>
-          <p class="section-subtitle">Ferramentas essenciais desenhadas para valorizar a essência de cada registro.</p>
-        </header>
-
-        <div class="features-grid">
-          <!-- Recurso 1: Ajustes precisos -->
-          <article class="feature-card fade-in-element">
-            <div class="feature-icon-wrapper" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="2" x2="12" y2="6"></line>
-                <line x1="12" y1="18" x2="12" y2="22"></line>
-                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-                <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </div>
-            <h3 class="feature-title">Ajustes precisos</h3>
-            <p class="feature-description">Luz, contraste e cor na medida do seu olhar.</p>
-          </article>
-
-          <!-- Recurso 2: Estilos que inspiram -->
-          <article class="feature-card fade-in-element">
-            <div class="feature-icon-wrapper" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
-              </svg>
-            </div>
-            <h3 class="feature-title">Estilos que inspiram</h3>
-            <p class="feature-description">Explore diferentes atmosferas com um toque.</p>
-          </article>
-
-          <!-- Recurso 3: Seu acervo, organizado -->
-          <article class="feature-card fade-in-element">
-            <div class="feature-icon-wrapper" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-                <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-                <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
-                <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
-              </svg>
-            </div>
-            <h3 class="feature-title">Seu acervo, organizado</h3>
-            <p class="feature-description">Reúna seus melhores momentos em um só lugar.</p>
-          </article>
-        </div>
+    <section class="gallery-section section-space container" id="galeria" aria-labelledby="gallery-title">
+      <header class="gallery-header reveal"><div><span class="eyebrow">INSPIRAÇÃO EM CADA CANTO</span><h2 id="gallery-title">O cotidiano,<br><span class="muted-text">sob outro olhar.</span></h2></div><p>Às vezes, tudo o que muda<br>é a forma de enxergar.<br><span class="gallery-instruction">Selecione uma foto para ampliar <span aria-hidden="true">↗</span></span></p></header>
+      <div class="gallery-grid">
+        <button type="button" class="gallery-item reveal" data-title="Geometria e luz" data-category="Arquitetura" aria-haspopup="dialog" aria-label="Ampliar Geometria e luz"><img src="assets/images/gallery-arquitetura.jpg" alt="Arranha-céus vistos de baixo com fachadas geométricas" width="1000" height="667" loading="lazy"><span class="gallery-caption"><span><small>ARQUITETURA</small><strong>Geometria e luz</strong></span><span class="gallery-arrow" aria-hidden="true">↗</span></span></button>
+        <button type="button" class="gallery-item reveal" data-title="Horizontes silenciosos" data-category="Paisagem" aria-haspopup="dialog" aria-label="Ampliar Horizontes silenciosos"><img src="assets/images/gallery-paisagem.jpg" alt="Lago e montanhas alpinas sob um céu azul" width="1000" height="667" loading="lazy"><span class="gallery-caption"><span><small>PAISAGEM</small><strong>Horizontes silenciosos</strong></span><span class="gallery-arrow" aria-hidden="true">↗</span></span></button>
+        <button type="button" class="gallery-item reveal" data-title="Expressão natural" data-category="Retrato" aria-haspopup="dialog" aria-label="Ampliar Expressão natural"><img src="assets/images/gallery-retrato.jpg" alt="Retrato de uma mulher ao ar livre em luz suave" width="1000" height="1498" loading="lazy"><span class="gallery-caption"><span><small>RETRATO</small><strong>Expressão natural</strong></span><span class="gallery-arrow" aria-hidden="true">↗</span></span></button>
+        <button type="button" class="gallery-item reveal" data-title="Uma pausa no dia" data-category="Cotidiano" aria-haspopup="dialog" aria-label="Ampliar Uma pausa no dia"><img src="assets/images/gallery-cotidiano.jpg" alt="Três pessoas reunindo suas xícaras de café" width="1000" height="667" loading="lazy"><span class="gallery-caption"><span><small>COTIDIANO</small><strong>Uma pausa no dia</strong></span><span class="gallery-arrow" aria-hidden="true">↗</span></span></button>
+        <button type="button" class="gallery-item reveal" data-title="Traços orgânicos" data-category="Natureza" aria-haspopup="dialog" aria-label="Ampliar Traços orgânicos"><img src="assets/images/gallery-textura.jpg" alt="Luz do sol atravessando os galhos de uma árvore" width="1000" height="1500" loading="lazy"><span class="gallery-caption"><span><small>NATUREZA</small><strong>Traços orgânicos</strong></span><span class="gallery-arrow" aria-hidden="true">↗</span></span></button>
+        <button type="button" class="gallery-item reveal" data-title="Cores da cidade" data-category="Urbano" aria-haspopup="dialog" aria-label="Ampliar Cores da cidade"><img src="assets/images/gallery-urbano.jpg" alt="Horizonte de Nova York com tons rosados ao entardecer" width="1000" height="607" loading="lazy"><span class="gallery-caption"><span><small>URBANO</small><strong>Cores da cidade</strong></span><span class="gallery-arrow" aria-hidden="true">↗</span></span></button>
       </div>
     </section>
 
-    <!-- ====================================================================
-         4. DEMONSTRAÇÃO INTERATIVA DE EDIÇÃO (SEÇÃO ESCURA)
-         ==================================================================== -->
-    <section class="demo-section" id="demonstracao" aria-labelledby="demo-title">
-      <div class="container">
-        <header class="section-header fade-in-element">
-          <span class="section-label">Demonstração Interativa</span>
-          <h2 id="demo-title" class="section-title">Pequenos ajustes. Outra atmosfera.</h2>
-          <p class="section-subtitle">Arraste a linha divisória ou utilize o teclado para comparar o antes e depois em tempo real.</p>
-        </header>
-
-        <!-- Seletor de Estilos de Edição -->
-        <div class="style-selector-container fade-in-element" role="group" aria-label="Seleção de estilo fotográfico">
-          <span class="style-selector-label" id="style-group-label">Estilo fotográfico:</span>
-          <div class="style-preset-group" role="radiogroup" aria-labelledby="style-group-label">
-            <button type="button" class="style-preset-btn is-active" data-style="natural" aria-pressed="true" role="radio" aria-checked="true">
-              Natural
-            </button>
-            <button type="button" class="style-preset-btn" data-style="cinema" aria-pressed="false" role="radio" aria-checked="false">
-              Cinema
-            </button>
-            <button type="button" class="style-preset-btn" data-style="mono" aria-pressed="false" role="radio" aria-checked="false">
-              Mono
-            </button>
-          </div>
-        </div>
-
-        <!-- Comparador Antes / Depois com a Mesma Fotografia -->
-        <div class="comparison-wrapper fade-in-element">
-          <div class="comparison-card" id="comparison-card" style="--split-pos: 50%;">
-            
-            <!-- Camada Base: Foto Original (Mesma foto, mesmo enquadramento) -->
-            <div class="comparison-layer-original">
-              <img 
-                src="assets/images/demo-photo.jpg" 
-                alt="Fotografia de paisagem natural sem edições, estado original" 
-                class="comparison-img"
-                loading="lazy"
-                width="1400"
-                height="875"
-              >
-            </div>
-
-            <!-- Camada Sobreposta: Foto com Efeito FRAME (Mesma foto, mesmo recorte, filtro CSS) -->
-            <div class="comparison-layer-modified filter-natural">
-              <img 
-                src="assets/images/demo-photo.jpg" 
-                alt="A mesma fotografia tratada com as ferramentas e estilos do FRAME" 
-                class="comparison-img"
-                loading="lazy"
-                width="1400"
-                height="875"
-              >
-            </div>
-
-            <!-- Rótulos de Orientação -->
-            <span class="comparison-badge comparison-badge-original">Original</span>
-            <span class="comparison-badge comparison-badge-modified" data-active-style="Natural">Com FRAME</span>
-
-            <!-- Linha Divisória & Alça Central com Ícones de Seta -->
-            <div class="comparison-divider" aria-hidden="true">
-              <div class="comparison-handle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 3 12 9 6"></polyline>
-                  <polyline points="15 6 21 12 15 18"></polyline>
-                </svg>
-              </div>
-            </div>
-
-            <!-- Input Range Nativo e Acessível para Controle de Divisão -->
-            <input 
-              type="range" 
-              id="comparison-range-input" 
-              class="comparison-range-input"
-              min="0" 
-              max="100" 
-              value="50" 
-              step="1"
-              aria-label="Controle deslizante para comparar imagem original com o resultado editado no FRAME"
-            >
-          </div>
-
-          <p class="demo-disclaimer">Demonstração interativa com efeitos visuais.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         5. GALERIA EDITORIAL
-         ==================================================================== -->
-    <section class="gallery-section" id="galeria" aria-labelledby="gallery-title">
-      <div class="container">
-        <header class="section-header fade-in-element">
-          <span class="section-label">Galeria</span>
-          <h2 id="gallery-title" class="section-title">O cotidiano, sob outro olhar.</h2>
-          <p class="section-subtitle">Composições reais valorizadas por uma gradação tonal cuidadosa.</p>
-        </header>
-
-        <div class="gallery-grid">
-          
-          <!-- Foto 1: Arquitetura -->
-          <button 
-            type="button"
-            class="gallery-item fade-in-element" 
-            data-title="Geometria e Luz" 
-            data-category="Arquitetura"
-            data-full="assets/images/gallery-arquitetura.jpg"
-            aria-haspopup="dialog"
-            aria-label="Abrir visualização: Geometria e Luz, Arquitetura"
-          >
-            <img 
-              src="assets/images/gallery-arquitetura.jpg" 
-              alt="Fachada moderna com linhas arquitetônicas precisas e reflexos de luz" 
-              class="gallery-item-image"
-              loading="lazy"
-              width="1000"
-              height="688"
-            >
-            <div class="gallery-item-overlay">
-              <span class="gallery-item-category">Arquitetura</span>
-              <span class="gallery-item-title">Geometria e Luz</span>
-              <span class="gallery-item-hint">Clique para ampliar</span>
-            </div>
-          </button>
-
-          <!-- Foto 2: Paisagem -->
-          <button 
-            type="button"
-            class="gallery-item fade-in-element" 
-            data-title="Horizontes Silenciosos" 
-            data-category="Paisagem"
-            data-full="assets/images/gallery-paisagem.jpg"
-            aria-haspopup="dialog"
-            aria-label="Abrir visualização: Horizontes Silenciosos, Paisagem"
-          >
-            <img 
-              src="assets/images/gallery-paisagem.jpg" 
-              alt="Picos montanhosos cobertos por névoa suave na primeira hora da manhã" 
-              class="gallery-item-image"
-              loading="lazy"
-              width="1000"
-              height="750"
-            >
-            <div class="gallery-item-overlay">
-              <span class="gallery-item-category">Paisagem</span>
-              <span class="gallery-item-title">Horizontes Silenciosos</span>
-              <span class="gallery-item-hint">Clique para ampliar</span>
-            </div>
-          </button>
-
-          <!-- Foto 3: Retrato -->
-          <button 
-            type="button"
-            class="gallery-item fade-in-element" 
-            data-title="Expressão Natural" 
-            data-category="Retrato"
-            data-full="assets/images/gallery-retrato.jpg"
-            aria-haspopup="dialog"
-            aria-label="Abrir visualização: Expressão Natural, Retrato"
-          >
-            <img 
-              src="assets/images/gallery-retrato.jpg" 
-              alt="Retrato intimista com iluminação lateral suave e expressão serena" 
-              class="gallery-item-image"
-              loading="lazy"
-              width="1000"
-              height="1333"
-            >
-            <div class="gallery-item-overlay">
-              <span class="gallery-item-category">Retrato</span>
-              <span class="gallery-item-title">Expressão Natural</span>
-              <span class="gallery-item-hint">Clique para ampliar</span>
-            </div>
-          </button>
-
-          <!-- Foto 4: Detalhes do Cotidiano -->
-          <button 
-            type="button"
-            class="gallery-item fade-in-element" 
-            data-title="Manhãs e Sombras" 
-            data-category="Cotidiano"
-            data-full="assets/images/gallery-cotidiano.jpg"
-            aria-haspopup="dialog"
-            aria-label="Abrir visualização: Manhãs e Sombras, Cotidiano"
-          >
-            <img 
-              src="assets/images/gallery-cotidiano.jpg" 
-              alt="Xícara de café sobre mesa de madeira banhada por luz matinal" 
-              class="gallery-item-image"
-              loading="lazy"
-              width="1000"
-              height="1333"
-            >
-            <div class="gallery-item-overlay">
-              <span class="gallery-item-category">Cotidiano</span>
-              <span class="gallery-item-title">Manhãs e Sombras</span>
-              <span class="gallery-item-hint">Clique para ampliar</span>
-            </div>
-          </button>
-
-          <!-- Foto 5: Texturas Naturais -->
-          <button 
-            type="button"
-            class="gallery-item fade-in-element" 
-            data-title="Traços Orgânicos" 
-            data-category="Textura"
-            data-full="assets/images/gallery-textura.jpg"
-            aria-haspopup="dialog"
-            aria-label="Abrir visualização: Traços Orgânicos, Textura"
-          >
-            <img 
-              src="assets/images/gallery-textura.jpg" 
-              alt="Folhagens e sombras projetadas em um contraste botânico elegante" 
-              class="gallery-item-image"
-              loading="lazy"
-              width="1000"
-              height="1333"
-            >
-            <div class="gallery-item-overlay">
-              <span class="gallery-item-category">Textura</span>
-              <span class="gallery-item-title">Traços Orgânicos</span>
-              <span class="gallery-item-hint">Clique para ampliar</span>
-            </div>
-          </button>
-
-          <!-- Foto 6: Ritmo Urbano -->
-          <button 
-            type="button"
-            class="gallery-item fade-in-element" 
-            data-title="Cores da Cidade" 
-            data-category="Urbano"
-            data-full="assets/images/gallery-urbano.jpg"
-            aria-haspopup="dialog"
-            aria-label="Abrir visualização: Cores da Cidade, Urbano"
-          >
-            <img 
-              src="assets/images/gallery-urbano.jpg" 
-              alt="Cena urbana ao entardecer com reflexos de iluminação suave na rua" 
-              class="gallery-item-image"
-              loading="lazy"
-              width="1000"
-              height="429"
-            >
-            <div class="gallery-item-overlay">
-              <span class="gallery-item-category">Urbano</span>
-              <span class="gallery-item-title">Cores da Cidade</span>
-              <span class="gallery-item-hint">Clique para ampliar</span>
-            </div>
-          </button>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Modal Lightbox da Galeria (Acessível) -->
-    <div 
-      class="lightbox-modal" 
-      id="gallery-lightbox" 
-      role="dialog" 
-      aria-modal="true" 
-      aria-hidden="true" 
-      aria-label="Visualização ampliada da fotografia"
-    >
-      <div class="lightbox-content">
-        <button type="button" class="lightbox-close-btn" id="lightbox-close-btn" aria-label="Fechar visualização ampliada">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-        
-        <div class="lightbox-image-wrapper">
-          <img src="" alt="" id="lightbox-img" class="lightbox-image">
-        </div>
-
-        <div class="lightbox-caption">
-          <h3 id="lightbox-title" class="lightbox-title"></h3>
-          <p id="lightbox-category" class="lightbox-category"></p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ====================================================================
-         6. CHAMADA FINAL (CTA)
-         ==================================================================== -->
-    <section class="cta-section" aria-labelledby="cta-title">
-      <div class="container">
-        <div class="cta-container fade-in-element">
-          <h2 id="cta-title" class="cta-title">Seu próximo olhar começa aqui.</h2>
-          <p class="cta-description">Explore os estilos e descubra novas possibilidades para suas fotos.</p>
-          <a href="#demonstracao" class="btn-primary">Experimentar FRAME</a>
-        </div>
-      </div>
-    </section>
-
+    <section class="cta-section container" aria-labelledby="cta-title"><div class="cta-panel reveal"><span class="eyebrow">O MUNDO TEM MUITO PARA MOSTRAR</span><h2 id="cta-title">Seu próximo olhar<br>começa <span class="accent-text">aqui.</span></h2><p>Explore. Experimente. Encontre sua forma de ver.</p><a class="btn-primary" href="#demonstracao">Experimentar FRAME <span aria-hidden="true">↗</span></a><span class="cta-watermark" aria-hidden="true">frame.</span></div></section>
   </main>
+  <footer class="site-footer container"><div class="footer-top"><a class="brand" href="#inicio">frame<span class="brand-dot">.</span></a><nav aria-label="Navegação do rodapé"><a href="#recursos">Recursos</a><a href="#demonstracao">O editor</a><a href="#galeria">Galeria</a></nav></div><div class="footer-bottom"><p>Projeto conceitual de um aplicativo de fotografia.<br>Desenvolvido para portfólio.</p><span>FRAME © 2026</span></div></footer>
 
-  <!-- ======================================================================
-       7. RODAPÉ (FOOTER)
-       ====================================================================== -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div class="footer-top">
-        <div class="brand">
-          <span class="brand-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 9V5a1 1 0 0 1 1-1h4" />
-              <path d="M20 9V5a1 1 0 0 0-1-1h-4" />
-              <path d="M4 15v4a1 1 0 0 0 1 1h4" />
-              <path d="M20 15v4a1 1 0 0 1-1 1h-4" />
-              <circle cx="12" cy="12" r="3" stroke-width="1.8" />
-            </svg>
-          </span>
-          <span class="brand-text">FRAME</span>
-        </div>
-
-        <ul class="footer-nav" aria-label="Links rápidos do rodapé">
-          <li><a href="#recursos">Recursos</a></li>
-          <li><a href="#galeria">Galeria</a></li>
-          <li><a href="#demonstracao">Experimente</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-bottom">
-        <div class="footer-notes">
-          <p>Projeto conceitual de um aplicativo de fotografia.</p>
-          <p>Desenvolvido para portfólio.</p>
-        </div>
-        <p class="footer-copyright">&copy; 2026 FRAME. Todos os direitos reservados.</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="js/main.js"></script>
+  <dialog class="lightbox-modal" id="gallery-lightbox" aria-labelledby="lightbox-title">
+    <button type="button" class="lightbox-close-btn icon-button" id="lightbox-close-btn" aria-label="Fechar fotografia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    <div class="lightbox-image-wrapper"><img alt="" id="lightbox-img" class="lightbox-image"></div>
+    <div class="lightbox-caption"><h2 id="lightbox-title"></h2><p id="lightbox-category"></p></div>
+  </dialog>
 </body>
 </html>
